@@ -1,0 +1,7 @@
+Debug
+Release
+ipch
+*.sdf
+*.opensdf
+*.suo
+build/vs2013/packages/cpprestsdk.2.4.0
