@@ -30,10 +30,11 @@ private:
 class Object
 {
 public:
-	Object(web::json::value const& json);
+	Object(utility::string_t const& className, web::json::value const& json);
 	~Object();
 
 public:
+	utility::string_t const& getClassName() const;
 	web::json::value const& getJson() const;
 	
 	utility::string_t getField(utility::string_t const& fieldName) const;
@@ -41,6 +42,7 @@ public:
 	void setField(utility::string_t const& fieldName, double const& value);
 	void setField(utility::string_t const& fieldName, int32_t const& value);
 	void setField(utility::string_t const& fieldName, bool const& value);
+	void setField(utility::string_t const& fieldName, parse::api::Object const& value);
 
 	utility::string_t getId() const;
 	utility::string_t getCreatedAt() const;
@@ -49,6 +51,7 @@ public:
 	void resetJson();
 
 private:
+	utility::string_t _ClassName;
 	web::json::value _Json;
 };
 

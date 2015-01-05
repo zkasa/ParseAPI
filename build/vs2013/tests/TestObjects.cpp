@@ -76,6 +76,26 @@ namespace tests
 			}
 		}
 
+		TEST_METHOD(CreatePointers)
+		{
+			parse::api::Client client(cParseAppKey, cParseRestKey);
+			parse::api::Objects objects(client, U("TestClass"));
+
+			auto obj1 = objects.createObject(U("{ \"name\" : \"Object 1\" }"));
+			Assert::IsFalse(obj1.getId().empty());
+
+			auto obj2 = objects.createObject(U("{ \"name\" : \"Object 2\" }"));
+			Assert::IsFalse(obj2.getId().empty());
+
+			obj1.setField(U("parent"), obj2);
+			objects.updateObject(obj1);
+
+			objects.deleteObject(obj2);
+			Assert::IsFalse(obj2.isValid());
+			objects.deleteObject(obj1);
+			Assert::IsFalse(obj1.isValid());
+
+		}
 
 	};
 }

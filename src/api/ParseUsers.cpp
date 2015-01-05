@@ -109,7 +109,7 @@ void parse::api::Users::deleteUser(parse::api::User& user)
 //////////////////////////////////////////////////////////////////////////
 
 parse::api::User::User(web::json::value const& json)
-	: Object(json)
+	: Object(U("_User"), json)
 {
 
 }
