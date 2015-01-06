@@ -15,10 +15,11 @@ public:
 	~Files();
 
 public:
-	File uploadFile(utility::string_t const& filePath);
-	File uploadFile(utility::string_t const& filePath, parse::api::Object& parent
+	File uploadFile(utility::string_t const& filePath, parse::api::Object& parent = parse::api::Object::null()
+		, utility::string_t const& fieldName = U(""));
+	std::vector<parse::api::File> getFiles(utility::string_t const& query = U(""));
+	std::vector<parse::api::File> getFilesOf(parse::api::Object const& parent
 		, utility::string_t const& fieldName);
-	std::vector<parse::api::File> getFiles(parse::api::Object const& parent = parse::api::Object::null());
 	bool deleteFile(parse::api::File& file);
 
 private:

@@ -1,3 +1,4 @@
+#include <boost/format.hpp>
 #include <cpprest/filestream.h>
 #include "constants.h"
 #include "ParseClient.h"
@@ -29,7 +30,8 @@ parse::api::Files::~Files()
 
 }
 
-parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath)
+parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath
+	, parse::api::Object& parent /*= parse::api::Object::null()*/, utility::string_t const& fieldName /*= U("")*/)
 {
 	web::http::http_request req(web::http::methods::POST);
 	_Client.fillCommonParseHeaders(req);
@@ -52,34 +54,33 @@ parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath
 		Objects objs(_Client, CLASS_FILE);
 		Object obj = objs.createObject(web::json::value::null());
 		obj.associateFile(FIELD_FILE, json);
+
+		if (parent != Object::null() && !fieldName.empty()) {
+			obj.setPointer(fieldName, parent);
+		}
+
 		objs.updateObject(obj);
 		return File(obj);
 	}
 	return File(Object::null());
 }
 
-parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath, parse::api::Object& parent
-	, utility::string_t const& fieldName)
-{
-	File file = uploadFile(filePath);
-	file.setPointer(fieldName, parent);
-	return file;
-}
-
-std::vector<parse::api::File> parse::api::Files::getFiles(parse::api::Object const& parent /*= parse::api::Object::null()*/)
+std::vector<parse::api::File> parse::api::Files::getFiles(utility::string_t const& query /* = U("") */)
 {
 	std::vector<parse::api::File> result;
-	if (parent == Object::null()) {
-		// get all files of application
-		for (auto obj : Objects(_Client, CLASS_FILE).getObjects()) {
-			result.push_back(File(obj));
-		}
-	}
-	else {
-		// get all files with specified parent
-		// TODO
+	for (auto obj : Objects(_Client, CLASS_FILE).getObjects(query)) {
+		result.push_back(File(obj));
 	}
 	return result;
+}
+
+std::vector<parse::api::File> parse::api::Files::getFilesOf(parse::api::Object const& parent 
+	, utility::string_t const& fieldName)
+{
+	utility::string_t query = (boost::basic_format<utility::char_t>(
+		U(R"(where={"%1%":{"__type":"Pointer","className":"%2%","objectId":"%3%"}})")
+		) % fieldName % parent.getClassName() % parent.getId()).str();
+	return getFiles(query);
 }
 
 bool parse::api::Files::deleteFile(parse::api::File& file)

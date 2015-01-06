@@ -15,7 +15,7 @@ parse::api::Objects::~Objects()
 
 }
 
-parse::api::Object parse::api::Objects::createObject(web::json::value const& json)
+parse::api::Object parse::api::Objects::createObject(web::json::value const& json /* = web::json::value::null() */)
 {
 	web::http::http_request req(web::http::methods::POST);
 	_Client.fillCommonParseHeaders(req);
@@ -194,4 +194,8 @@ bool parse::api::Object::isValid() const {
 bool parse::api::Object::operator==(parse::api::Object const& obj) const {
 	return getClassName() == obj.getClassName()
 		&& getJson() == obj.getJson();
+}
+
+bool parse::api::Object::operator!=(parse::api::Object const& obj) const {
+	return !(*this == obj);
 }

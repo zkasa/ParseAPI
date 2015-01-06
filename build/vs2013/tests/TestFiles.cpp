@@ -36,5 +36,33 @@ namespace tests
 			}
 		}
 
+		TEST_METHOD(QueryFile)
+		{
+			try {
+				parse::api::Client client(cParseAppKey, cParseRestKey, cParseMasterKey);
+				parse::api::Objects objs(client, U("FileOwner"));
+				parse::api::Files files(client);
+
+				auto file1 = files.uploadFile(U(R"(..\tests\test.7z)"));
+				Assert::IsTrue(file1.isValid());
+
+				auto obj = objs.createObject();
+				Assert::IsTrue(obj.isValid());
+
+				auto file2 = files.uploadFile(U(R"(..\tests\test.7z)"), obj, U("owner"));
+				Assert::IsTrue(file2.isValid());
+
+				auto listFiles = files.getFilesOf(obj, U("owner"));
+				Assert::IsTrue(listFiles.size() == 1);
+
+				Assert::IsTrue(files.deleteFile(file1));
+				Assert::IsTrue(files.deleteFile(file2));
+				objs.deleteObject(obj);
+				Assert::IsFalse(obj.isValid());
+			}
+			catch (std::exception const& ex) {
+				Assert::Fail(utility::conversions::to_string_t(ex.what()).c_str());
+			}
+		}
 	};
 }

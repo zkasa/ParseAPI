@@ -14,7 +14,7 @@ public:
 	~Objects();
 
 public:
-	parse::api::Object createObject(web::json::value const& json);
+	parse::api::Object createObject(web::json::value const& json = web::json::value::null());
 	parse::api::Object createObject(utility::string_t const& jsonStr);
 	std::vector<parse::api::Object> getObjects(utility::string_t const& query = U(""));
 	parse::api::Object getObject(utility::string_t const& objectId);
@@ -36,6 +36,7 @@ public:
 public:
 	static parse::api::Object null();
 	bool operator==(parse::api::Object const& obj) const;
+	bool operator!=(parse::api::Object const& obj) const;
 
 	utility::string_t const& getClassName() const;
 	web::json::value const& getJson() const;
