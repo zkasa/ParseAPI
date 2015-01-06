@@ -5,3 +5,4 @@ ipch
 *.opensdf
 *.suo
 build/vs2013/packages/cpprestsdk.2.4.0
+/build/vs2013/tests/tests.vcxproj.user

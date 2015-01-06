@@ -15,7 +15,7 @@ namespace tests
 		
 		TEST_METHOD(CreateObjects)
 		{
-			parse::api::Client client(cParseAppKey, cParseRestKey);
+			parse::api::Client client(cParseAppKey, cParseRestKey, cParseMasterKey);
 			parse::api::Objects objects(client, U("TestClass"));
 
 			auto obj = objects.createObject(web::json::value::null());
@@ -27,7 +27,7 @@ namespace tests
 
 		TEST_METHOD(GettingObjects)
 		{
-			parse::api::Client client(cParseAppKey, cParseRestKey);
+			parse::api::Client client(cParseAppKey, cParseRestKey, cParseMasterKey);
 			parse::api::Objects objects(client, U("TestClass"));
 
 			auto obj1 = objects.createObject(web::json::value::null());
@@ -52,7 +52,7 @@ namespace tests
 		TEST_METHOD(QueryingObjects)
 		{
 			try {
-				parse::api::Client client(cParseAppKey, cParseRestKey);
+				parse::api::Client client(cParseAppKey, cParseRestKey, cParseMasterKey);
 				parse::api::Objects objects(client, U("TestClass"));
 
 				auto obj1 = objects.createObject(U("{ \"name\" : \"Object 1\" }"));
@@ -78,7 +78,7 @@ namespace tests
 
 		TEST_METHOD(CreatePointers)
 		{
-			parse::api::Client client(cParseAppKey, cParseRestKey);
+			parse::api::Client client(cParseAppKey, cParseRestKey, cParseMasterKey);
 			parse::api::Objects objects(client, U("TestClass"));
 
 			auto obj1 = objects.createObject(U("{ \"name\" : \"Object 1\" }"));
@@ -87,7 +87,7 @@ namespace tests
 			auto obj2 = objects.createObject(U("{ \"name\" : \"Object 2\" }"));
 			Assert::IsFalse(obj2.getId().empty());
 
-			obj1.setField(U("parent"), obj2);
+			obj1.setPointer(U("parent"), obj2);
 			objects.updateObject(obj1);
 
 			objects.deleteObject(obj2);

@@ -1,8 +1,7 @@
+#include "constants.h"
 #include "ParseClient.h"
 
 #include "ParseObjects.h"
-
-const utility::string_t CLASSES_URI = U("/1/classes");
 
 parse::api::Objects::Objects(parse::api::Client const& client, utility::string_t const& className)
 	: _Client(client)
@@ -27,7 +26,7 @@ parse::api::Object parse::api::Objects::createObject(web::json::value const& jso
 	req.set_body(json);
 	req.set_request_uri(builder.to_uri());
 
-	return Object(_ClassName, _Client.requestSync(req));
+	return Object(_ClassName, _Client.requestJsonSync(req));
 }
 
 parse::api::Object parse::api::Objects::createObject(utility::string_t const& jsonStr)
@@ -49,10 +48,10 @@ std::vector<parse::api::Object> parse::api::Objects::getObjects(utility::string_
 	}
 	req.set_request_uri(builder.to_uri());
 
-	auto json = _Client.requestSync(req);
+	auto json = _Client.requestJsonSync(req);
 	std::vector<parse::api::Object> objects;
-	if (json.has_field(U("results")) && json[U("results")].is_array()) {
-		for (auto o : json[U("results")].as_array()) {
+	if (json.has_field(FIELD_RESULTS) && json[FIELD_RESULTS].is_array()) {
+		for (auto o : json[FIELD_RESULTS].as_array()) {
 			objects.push_back(Object(_ClassName, o));
 		}
 	}
@@ -70,7 +69,7 @@ parse::api::Object parse::api::Objects::getObject(utility::string_t const& objec
 
 	req.set_request_uri(builder.to_uri());
 
-	return Object(_ClassName, _Client.requestSync(req));
+	return Object(_ClassName, _Client.requestJsonSync(req));
 }
 
 void parse::api::Objects::updateObject(parse::api::Object& object)
@@ -86,7 +85,7 @@ void parse::api::Objects::updateObject(parse::api::Object& object)
 	req.set_body(object.getJson());
 	req.set_request_uri(builder.to_uri());
 
-	auto json = _Client.requestSync(req);
+	auto json = _Client.requestJsonSync(req);
 	//TODO: check result
 }
 
@@ -107,7 +106,7 @@ void parse::api::Objects::deleteObject(utility::string_t const& objectId)
 
 	req.set_request_uri(builder.to_uri());
 
-	auto json = _Client.requestSync(req);
+	auto json = _Client.requestJsonSync(req);
 	//TODO: check result
 }
 
@@ -123,6 +122,10 @@ parse::api::Object::Object(utility::string_t const& className, web::json::value 
 parse::api::Object::~Object()
 {
 	_Json = web::json::value::null();
+}
+
+parse::api::Object parse::api::Object::null() {
+	return Object(U(""), web::json::value::null());
 }
 
 utility::string_t const& parse::api::Object::getClassName() const {
@@ -156,22 +159,26 @@ void parse::api::Object::setField(utility::string_t const& fieldName, bool const
 	_Json[fieldName] = web::json::value::boolean(value);
 }
 
-void parse::api::Object::setField(utility::string_t const& fieldName, parse::api::Object const& value)
+void parse::api::Object::setPointer(utility::string_t const& fieldName, parse::api::Object const& obj)
 {
 	auto pointer = web::json::value::object();
-	pointer[U("__type")] = web::json::value::string(U("Pointer"));
-	pointer[U("className")] = web::json::value::string(value.getClassName());
-	pointer[U("objectId")] = web::json::value::string(value.getId());
+	pointer[FIELD_TYPE] = web::json::value::string(TYPE_POINTER);
+	pointer[FIELD_CLASS_NAME] = web::json::value::string(obj.getClassName());
+	pointer[FIELD_OBJECT_ID] = web::json::value::string(obj.getId());
 
 	_Json[fieldName] = pointer;
 }
 
+void parse::api::Object::associateFile(utility::string_t const& fieldName, web::json::value const& json) {
+	_Json[fieldName] = json;
+}
+
 utility::string_t parse::api::Object::getId() const {
-	return getField(U("objectId"));
+	return getField(FIELD_OBJECT_ID);
 }
 
 utility::string_t parse::api::Object::getCreatedAt() const {
-	return getField(U("createdAt"));
+	return getField(FIELD_CREATED_AT);
 }
 
 void parse::api::Object::resetJson() {
@@ -182,4 +189,9 @@ bool parse::api::Object::isValid() const {
 	return _Json != web::json::value::null() 
 		&& !getId().empty()
 		&& !getCreatedAt().empty();
+}
+
+bool parse::api::Object::operator==(parse::api::Object const& obj) const {
+	return getClassName() == obj.getClassName()
+		&& getJson() == obj.getJson();
 }

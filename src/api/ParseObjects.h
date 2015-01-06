@@ -34,6 +34,9 @@ public:
 	~Object();
 
 public:
+	static parse::api::Object null();
+	bool operator==(parse::api::Object const& obj) const;
+
 	utility::string_t const& getClassName() const;
 	web::json::value const& getJson() const;
 	
@@ -42,7 +45,9 @@ public:
 	void setField(utility::string_t const& fieldName, double const& value);
 	void setField(utility::string_t const& fieldName, int32_t const& value);
 	void setField(utility::string_t const& fieldName, bool const& value);
-	void setField(utility::string_t const& fieldName, parse::api::Object const& value);
+	
+	void setPointer(utility::string_t const& fieldName, parse::api::Object const& obj);
+	void associateFile(utility::string_t const& fieldName, web::json::value const& json);
 
 	utility::string_t getId() const;
 	utility::string_t getCreatedAt() const;

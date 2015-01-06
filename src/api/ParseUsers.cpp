@@ -1,8 +1,7 @@
+#include "constants.h"
 #include "ParseClient.h"
 
 #include "ParseUsers.h"
-
-const utility::string_t USERS_URI = U("/1/users");
 
 parse::api::Users::Users(parse::api::Client const& client)
 	: _Client(client)
@@ -22,8 +21,8 @@ parse::api::User parse::api::Users::createUser(utility::string_t const& userName
 	_Client.fillCommonParseHeaders(req);
 
 	web::json::value objUser;
-	objUser[L"username"] = web::json::value::string(userName);
-	objUser[L"password"] = web::json::value::string(password);
+	objUser[FIELD_USERNAME] = web::json::value::string(userName);
+	objUser[FIELD_PASSWORD] = web::json::value::string(password);
 	
 	if (!additionalFields.is_null() && additionalFields.is_object()) {
 		for (auto field : additionalFields.as_object()) {
@@ -33,7 +32,7 @@ parse::api::User parse::api::Users::createUser(utility::string_t const& userName
 	req.set_body(objUser);
 	req.set_request_uri(USERS_URI);
 
-	return User(_Client.requestSync(req));
+	return User(_Client.requestJsonSync(req));
 }
 
 parse::api::User parse::api::Users::createUser(utility::string_t const& userName, utility::string_t const& password
@@ -49,10 +48,10 @@ std::vector<parse::api::User> parse::api::Users::getUsers()
 	_Client.fillCommonParseHeaders(req);
 	req.set_request_uri(USERS_URI);
 
-	auto json = _Client.requestSync(req);
+	auto json = _Client.requestJsonSync(req);
 	std::vector<parse::api::User> users;
-	if (json.has_field(U("results")) && json[U("results")].is_array()) {
-		for (auto u : json[U("results")].as_array()) {
+	if (json.has_field(FIELD_RESULTS) && json[FIELD_RESULTS].is_array()) {
+		for (auto u : json[FIELD_RESULTS].as_array()) {
 			users.push_back(User(u));
 		}
 	}
@@ -69,14 +68,14 @@ parse::api::User parse::api::Users::getUser(utility::string_t const& userId)
 
 	req.set_request_uri(builder.to_uri());
 
-	return User(_Client.requestSync(req));
+	return User(_Client.requestJsonSync(req));
 }
 
 void parse::api::Users::updateUser(parse::api::User const& user)
 {
 	web::http::http_request req(web::http::methods::PUT);
 	_Client.fillCommonParseHeaders(req);
-	req.headers().add(U("X-Parse-Session-Token"), user.getSessionToken());
+	req.headers().add(HEADER_SESSION_TOKEN, user.getSessionToken());
 
 	web::http::uri_builder builder(USERS_URI);
 	builder.append_path(user.getId());
@@ -85,7 +84,7 @@ void parse::api::Users::updateUser(parse::api::User const& user)
 	req.set_body(user.getJson());
 	req.set_request_uri(builder.to_uri());
 
-	_Client.requestSync(req);
+	_Client.requestJsonSync(req);
 	//TODO: check result
 }
 
@@ -93,14 +92,14 @@ void parse::api::Users::deleteUser(parse::api::User& user)
 {
 	web::http::http_request req(web::http::methods::DEL);
 	_Client.fillCommonParseHeaders(req);
-	req.headers().add(U("X-Parse-Session-Token"), user.getSessionToken());
+	req.headers().add(HEADER_SESSION_TOKEN, user.getSessionToken());
 
 	web::http::uri_builder builder(USERS_URI);
 	builder.append_path(user.getId());
 
 	req.set_request_uri(builder.to_uri());
 
-	_Client.requestSync(req);
+	_Client.requestJsonSync(req);
 	//TODO: check result
 
 	user.setDeleted();
@@ -120,15 +119,15 @@ parse::api::User::~User()
 }
 
 utility::string_t parse::api::User::getName() const {
-	return getField(U("username"));
+	return getField(FIELD_USERNAME);
 }
 
 bool parse::api::User::isLoggedIn() const {
-	return !getField(U("sessionToken")).empty();
+	return !getField(FIELD_SESSION_TOKEN).empty();
 }
 
 utility::string_t parse::api::User::getSessionToken() const {
-	return getField(U("sessionToken"));
+	return getField(FIELD_SESSION_TOKEN);
 }
 
 void parse::api::User::setDeleted() {
