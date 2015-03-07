@@ -1,1 +1,1 @@
-A simple C++ wrapper/SDK for Parse REST API.
+A simple C++ wrapper/SDK for Parse REST API https://www.parse.com/docs/rest#summary 
