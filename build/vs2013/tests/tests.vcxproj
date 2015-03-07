@@ -97,6 +97,7 @@
     </ClCompile>
     <ClCompile Include="TestFiles.cpp" />
     <ClCompile Include="TestObjects.cpp" />
+    <ClCompile Include="TestUsers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

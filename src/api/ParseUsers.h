@@ -21,6 +21,9 @@ public:
 		, web::json::value const& additionalFields = web::json::value::null());
 	parse::api::User createUser(utility::string_t const& userName, utility::string_t const& password
 		, utility::string_t const& additionalFields);
+	parse::api::User loginUser(utility::string_t const& userName, utility::string_t const& password);
+	parse::api::User validateSession(parse::api::User const& user);
+
 	std::vector<parse::api::User> getUsers();
 	parse::api::User getUser(utility::string_t const& userId);
 	void updateUser(parse::api::User const& user);

@@ -42,6 +42,32 @@ parse::api::User parse::api::Users::createUser(utility::string_t const& userName
 	return createUser(userName, password, val);
 }
 
+parse::api::User parse::api::Users::loginUser(utility::string_t const& userName, utility::string_t const& password)
+{
+	web::http::http_request req(web::http::methods::GET);
+	_Client.fillCommonParseHeaders(req);
+
+	web::http::uri_builder builder(LOGIN_URI);
+
+	builder.append_query(U("username"), userName, true);
+	builder.append_query(U("password"), password, true);
+
+	req.set_request_uri(builder.to_uri());
+
+	return User(_Client.requestJsonSync(req));
+}
+
+parse::api::User parse::api::Users::validateSession(parse::api::User const& user)
+{
+	web::http::http_request req(web::http::methods::GET);
+	_Client.fillCommonParseHeaders(req);
+	req.headers().add(HEADER_SESSION_TOKEN, user.getSessionToken());
+
+	req.set_request_uri(USERS_ME_URI);
+
+	return User(_Client.requestJsonSync(req));
+}
+
 std::vector<parse::api::User> parse::api::Users::getUsers()
 {
 	web::http::http_request req(web::http::methods::GET);

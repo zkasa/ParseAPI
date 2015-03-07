@@ -2,7 +2,9 @@
 #include "cpprest/details/basic_types.h"
 
 const utility::string_t MAIN_URI = U("https://api.parse.com");
+const utility::string_t LOGIN_URI = U("/1/login");
 const utility::string_t USERS_URI = U("/1/users");
+const utility::string_t USERS_ME_URI = U("/1/users/me");
 const utility::string_t FILES_URI = U("/1/files");
 const utility::string_t CLASSES_URI = U("/1/classes");
 
