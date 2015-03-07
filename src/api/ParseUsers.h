@@ -8,6 +8,7 @@ namespace parse {
 namespace api {
 
 class Client;
+class Error;
 class User;
 
 class Users
@@ -27,7 +28,8 @@ public:
 	std::vector<parse::api::User> getUsers();
 	parse::api::User getUser(utility::string_t const& userId);
 	void updateUser(parse::api::User const& user);
-	void deleteUser(parse::api::User& user);
+	// forceDelete means we should delete given user by passing master key instead of session token
+	parse::api::Error deleteUser(parse::api::User& user, bool forceDelete = false);
 
 private:
 	parse::api::Client _Client;

@@ -199,3 +199,7 @@ bool parse::api::Object::operator==(parse::api::Object const& obj) const {
 bool parse::api::Object::operator!=(parse::api::Object const& obj) const {
 	return !(*this == obj);
 }
+
+utility::string_t parse::api::Object::operator[](utility::string_t const& fieldName) const {
+	return getField(fieldName);
+}

@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\api\ParseClient.cpp" />
+    <ClCompile Include="..\..\..\src\api\ParseError.cpp" />
     <ClCompile Include="..\..\..\src\api\ParseFiles.cpp" />
     <ClCompile Include="..\..\..\src\api\ParseObjects.cpp" />
     <ClCompile Include="..\..\..\src\api\ParseUsers.cpp" />
@@ -20,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\src\api\constants.h" />
     <ClInclude Include="..\..\..\src\api\ParseClient.h" />
+    <ClInclude Include="..\..\..\src\api\ParseError.h" />
     <ClInclude Include="..\..\..\src\api\ParseFiles.h" />
     <ClInclude Include="..\..\..\src\api\ParseObjects.h" />
     <ClInclude Include="..\..\..\src\api\ParseUsers.h" />

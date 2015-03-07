@@ -6,6 +6,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "keys.h"
 #include "ParseClient.h"
 #include "ParseUsers.h"
+#include "ParseError.h"
 
 namespace tests
 {
@@ -56,7 +57,33 @@ namespace tests
 			Assert::IsTrue(vu2.isValid());
 
 			users.deleteUser(u);
+		}
 
+		const utility::string_t FIELD_EMAIL = U("email");
+		const utility::string_t FIELD_PHONE = U("phone");
+		const utility::string_t EMAIL = U("givi@war.nr");
+		const utility::string_t PHONE = U("+365 999 2233");
+
+		TEST_METHOD(CreateUserWithExtendedFields)
+		{
+			parse::api::Client client(cParseAppKey, cParseRestKey, cParseMasterKey);
+			parse::api::Users users(client);
+
+			auto fields = web::json::value::object();
+			fields[FIELD_EMAIL] = web::json::value::string(EMAIL);
+			fields[FIELD_PHONE] = web::json::value::string(PHONE);
+
+			auto u = users.createUser(U("givi"), U("death"), fields);
+			Assert::IsTrue(u.isValid());
+
+			u = users.getUser(u.getId());
+			Assert::IsTrue(u.isValid());
+			Assert::AreEqual(u[FIELD_EMAIL], EMAIL);
+			Assert::AreEqual(u[FIELD_PHONE], PHONE);
+
+			auto res = users.deleteUser(u, true);
+			Assert::IsFalse(res.isError());
+			Assert::IsFalse(u.isValid());
 		}
 
 	};

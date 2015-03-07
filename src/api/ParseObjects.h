@@ -37,6 +37,7 @@ public:
 	static parse::api::Object null();
 	bool operator==(parse::api::Object const& obj) const;
 	bool operator!=(parse::api::Object const& obj) const;
+	utility::string_t operator[](utility::string_t const& fieldName) const;
 
 	utility::string_t const& getClassName() const;
 	web::json::value const& getJson() const;

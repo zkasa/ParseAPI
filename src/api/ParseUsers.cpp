@@ -1,5 +1,6 @@
 #include "constants.h"
 #include "ParseClient.h"
+#include "ParseError.h"
 
 #include "ParseUsers.h"
 
@@ -114,21 +115,35 @@ void parse::api::Users::updateUser(parse::api::User const& user)
 	//TODO: check result
 }
 
-void parse::api::Users::deleteUser(parse::api::User& user)
+parse::api::Error parse::api::Users::deleteUser(parse::api::User& user, bool forceDelete /* = false */)
 {
 	web::http::http_request req(web::http::methods::DEL);
-	_Client.fillCommonParseHeaders(req);
-	req.headers().add(HEADER_SESSION_TOKEN, user.getSessionToken());
+
+	// в обычных условиях мы можем изменять поля или удалять юзера
+	// только имея валидный session key
+	// однако, если мы получаем юзера через getUser/getUsers мы НЕ имеем 
+	// в полученных параметрах session key, он передается только при логине
+	// если в подобных случаях требуется удалить пользователя, следует передать
+	// forceDelete = true
+	if (forceDelete && user.getSessionToken().empty()) {
+		_Client.fillCommonParseHeaders(req, true);
+	}
+	else {
+		_Client.fillCommonParseHeaders(req);
+		req.headers().add(HEADER_SESSION_TOKEN, user.getSessionToken());
+	}
 
 	web::http::uri_builder builder(USERS_URI);
 	builder.append_path(user.getId());
 
 	req.set_request_uri(builder.to_uri());
 
-	_Client.requestJsonSync(req);
-	//TODO: check result
+	Error res = _Client.requestJsonSync(req);
 
-	user.setDeleted();
+	if (!res.isError())
+		user.setDeleted();
+
+	return res;
 }
 
 //////////////////////////////////////////////////////////////////////////
