@@ -59,7 +59,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <NuGetPackageImportStamp>ac83b024</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>ef93dec9</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>c:\dev\libs\boost_1_57_0;$(IncludePath)</IncludePath>
@@ -102,13 +102,12 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="$(SolutionDir)\packages\cpprestsdk.2.4.0.1\build\native\cpprestsdk.targets" Condition="Exists('$(SolutionDir)\packages\cpprestsdk.2.4.0.1\build\native\cpprestsdk.targets')" />
+    <Import Project="$(SolutionDir)\packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.5.0\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\..\..\..\packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.5.0\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\packages\cpprestsdk.2.4.0.1\build\native\cpprestsdk.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\cpprestsdk.2.4.0.1\build\native\cpprestsdk.props'))" />
-    <Error Condition="!Exists('$(SolutionDir)\packages\cpprestsdk.2.4.0.1\build\native\cpprestsdk.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\cpprestsdk.2.4.0.1\build\native\cpprestsdk.targets'))" />
+    <Error Condition="!Exists('$(SolutionDir)\packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.5.0\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\packages\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.2.5.0\build\native\cpprestsdk.v120.winxp.msvcstl.dyn.rt-dyn.targets'))" />
   </Target>
 </Project>
