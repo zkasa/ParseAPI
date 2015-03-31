@@ -187,8 +187,7 @@ void parse::api::Object::resetJson() {
 
 bool parse::api::Object::isValid() const {
 	return _Json != web::json::value::null() 
-		&& !getId().empty()
-		&& !getCreatedAt().empty();
+		&& !getId().empty();
 }
 
 bool parse::api::Object::operator==(parse::api::Object const& obj) const {

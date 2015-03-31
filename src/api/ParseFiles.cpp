@@ -30,21 +30,9 @@ parse::api::Files::~Files()
 
 }
 
-parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath
-	, parse::api::Object& parent /*= parse::api::Object::null()*/, utility::string_t const& fieldName /*= U("")*/)
+parse::api::File parse::api::Files::uploadRequest(web::http::http_request& req, parse::api::Object& parent
+	, utility::string_t const& fieldName)
 {
-	web::http::http_request req(web::http::methods::POST);
-	_Client.fillCommonParseHeaders(req);
-
-	web::http::uri_builder builder(FILES_URI);
-	builder.append_path(getFileNameFromPath(filePath));
-
-	auto task = Concurrency::streams::file_stream<unsigned char>::open_istream(filePath);
-	task.wait();
-
-	req.set_body(task.get());
-	req.set_request_uri(builder.to_uri());
-
 	auto json = _Client.requestJsonSync(req);
 
 	if (json.has_field(FIELD_NAME) && json.has_field(FIELD_URL)) {
@@ -65,6 +53,38 @@ parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath
 	return File(Object::null());
 }
 
+parse::api::File parse::api::Files::uploadFile(utility::string_t const& filePath
+	, parse::api::Object& parent /*= parse::api::Object::null()*/, utility::string_t const& fieldName /*= U("")*/)
+{
+	web::http::http_request req(web::http::methods::POST);
+	_Client.fillCommonParseHeaders(req);
+
+	web::http::uri_builder builder(FILES_URI);
+	builder.append_path(getFileNameFromPath(filePath));
+
+	auto task = Concurrency::streams::file_stream<unsigned char>::open_istream(filePath);
+	task.wait();
+
+	req.set_body(task.get());
+	req.set_request_uri(builder.to_uri());
+
+	return uploadRequest(req, parent, fieldName);
+}
+
+parse::api::File parse::api::Files::uploadFile(std::vector<unsigned char> const& data, utility::string_t const& fileName, parse::api::Object& parent /*= parse::api::Object::null()*/, utility::string_t const& fieldName /*= U("")*/)
+{
+	web::http::http_request req(web::http::methods::POST);
+	_Client.fillCommonParseHeaders(req);
+
+	web::http::uri_builder builder(FILES_URI);
+	builder.append_path(fileName);
+
+	req.set_body(data);
+	req.set_request_uri(builder.to_uri());
+
+	return uploadRequest(req, parent, fieldName);
+}
+
 std::vector<parse::api::File> parse::api::Files::getFiles(utility::string_t const& query /* = U("") */)
 {
 	std::vector<parse::api::File> result;
@@ -81,6 +101,12 @@ std::vector<parse::api::File> parse::api::Files::getFilesOf(parse::api::Object c
 		U(R"(where={"%1%":{"__type":"Pointer","className":"%2%","objectId":"%3%"}})")
 		) % fieldName % parent.getClassName() % parent.getId()).str();
 	return getFiles(query);
+}
+
+void parse::api::Files::updateFile(parse::api::File& file)
+{
+	Object obj(file.getClassName(), file.getJson());
+	Objects(_Client, file.getClassName()).updateObject(obj);
 }
 
 bool parse::api::Files::deleteFile(parse::api::File& file)
