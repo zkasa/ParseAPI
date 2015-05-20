@@ -1,5 +1,7 @@
 #include <boost/format.hpp>
 #include <cpprest/filestream.h>
+#include <cpprest/streams.h>
+
 #include "constants.h"
 #include "ParseClient.h"
 #include "ParseObjects.h"
@@ -103,6 +105,44 @@ std::vector<parse::api::File> parse::api::Files::getFilesOf(parse::api::Object c
 	return getFiles(query);
 }
 
+bool parse::api::Files::downloadFile(parse::api::File const& file, utility::string_t const& localFilePath)
+{
+	using namespace concurrency::streams;
+	auto fileStream = std::make_shared<ostream>();
+
+	// Open stream to output file.
+	pplx::task<void> requestTask = fstream::open_ostream(localFilePath).
+	then([=](ostream outFile)
+	{
+		*fileStream = outFile;
+
+		// Create http_client to send the request.
+		web::http::client::http_client client(file.getFileUri());
+
+		return client.request(web::http::methods::GET);
+	})
+		// Handle response headers arriving.
+	.then([=](web::http::http_response response)
+	{
+		// Write response body into the file.
+		return response.body().read_to_end(fileStream->streambuf());
+	})
+		// Close the file stream.
+	.then([=](size_t)
+	{
+		return fileStream->close();
+	});
+
+	// Wait for all the outstanding I/O to complete and handle any exceptions
+	try {
+		requestTask.wait();
+	}
+	catch (const std::exception &e) {
+		return false;
+	}
+	return true;
+}
+
 void parse::api::Files::updateFile(parse::api::File& file)
 {
 	Object obj(file.getClassName(), file.getJson());
@@ -133,6 +173,12 @@ bool parse::api::Files::deleteFile(parse::api::File& file)
 
 parse::api::File::File(parse::api::Object const& obj)
 	: Object(obj.getClassName(), obj.getJson())
+{
+
+}
+
+parse::api::File::File(web::json::value const& json)
+	: Object(CLASS_FILE, json)
 {
 
 }

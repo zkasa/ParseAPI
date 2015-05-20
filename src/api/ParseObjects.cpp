@@ -138,9 +138,11 @@ web::json::value const& parse::api::Object::getJson() const {
 
 utility::string_t parse::api::Object::getField(utility::string_t const& fieldName) const
 {
-	if (!_Json.has_field(fieldName))
-		return utility::string_t();
 	return _Json.at(fieldName).as_string();
+}
+
+web::json::number parse::api::Object::getFieldAsNumber(utility::string_t const& fieldName) const {
+	return _Json.at(fieldName).as_number();
 }
 
 void parse::api::Object::setField(utility::string_t const& fieldName, utility::string_t const& value) {
@@ -179,6 +181,10 @@ utility::string_t parse::api::Object::getId() const {
 
 utility::string_t parse::api::Object::getCreatedAt() const {
 	return getField(FIELD_CREATED_AT);
+}
+
+utility::string_t parse::api::Object::getUpdatedAt() const {
+	return getField(FIELD_UPDATED_AT);
 }
 
 void parse::api::Object::resetJson() {

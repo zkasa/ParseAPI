@@ -43,6 +43,7 @@ public:
 	web::json::value const& getJson() const;
 	
 	utility::string_t getField(utility::string_t const& fieldName) const;
+	web::json::number getFieldAsNumber(utility::string_t const& fieldName) const;
 	void setField(utility::string_t const& fieldName, utility::string_t const& value);
 	void setField(utility::string_t const& fieldName, double const& value);
 	void setField(utility::string_t const& fieldName, int32_t const& value);
@@ -53,6 +54,7 @@ public:
 
 	utility::string_t getId() const;
 	utility::string_t getCreatedAt() const;
+	utility::string_t getUpdatedAt() const;
 
 	bool isValid() const;
 	void resetJson();

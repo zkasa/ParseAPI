@@ -26,11 +26,13 @@ public:
 	// get all files belongs to Object passed as parent
 	std::vector<parse::api::File> getFilesOf(parse::api::Object const& parent
 		, utility::string_t const& fieldName);
+	bool downloadFile(parse::api::File const& file, utility::string_t const& localFilePath);
 	void updateFile(parse::api::File& file);
 	bool deleteFile(parse::api::File& file);
 
 private:
-	File uploadRequest(web::http::http_request& req, parse::api::Object& parent, utility::string_t const& fieldName);
+	File uploadRequest(web::http::http_request& req, parse::api::Object& parent
+		, utility::string_t const& fieldName);
 
 private:
 	parse::api::Client _Client;
@@ -40,6 +42,7 @@ class File : public Object
 {
 public:
 	File(parse::api::Object const& obj);
+	File(web::json::value const& json);
 	~File();
 
 public:

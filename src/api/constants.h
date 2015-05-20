@@ -19,6 +19,7 @@ const utility::string_t FIELD_USERNAME = U("username");
 const utility::string_t FIELD_PASSWORD = U("password");
 const utility::string_t FIELD_OBJECT_ID = U("objectId");
 const utility::string_t FIELD_CREATED_AT = U("createdAt");
+const utility::string_t FIELD_UPDATED_AT = U("updatedAt");
 const utility::string_t FIELD_CLASS_NAME = U("className");
 const utility::string_t FIELD_SESSION_TOKEN = U("sessionToken");
 
