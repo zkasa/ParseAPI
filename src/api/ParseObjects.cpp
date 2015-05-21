@@ -136,8 +136,11 @@ web::json::value const& parse::api::Object::getJson() const {
 	return _Json;
 }
 
-utility::string_t parse::api::Object::getField(utility::string_t const& fieldName) const
-{
+bool parse::api::Object::hasField(utility::string_t const& fieldName) const {
+	return _Json.has_field(fieldName);
+}
+
+utility::string_t parse::api::Object::getField(utility::string_t const& fieldName) const {
 	return _Json.at(fieldName).as_string();
 }
 
