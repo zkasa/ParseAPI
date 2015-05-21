@@ -79,7 +79,7 @@ parse::api::File parse::api::Files::uploadFile(std::vector<unsigned char> const&
 	_Client.fillCommonParseHeaders(req);
 
 	web::http::uri_builder builder(FILES_URI);
-	builder.append_path(fileName);
+	builder.append_path(fileName, true);
 
 	req.set_body(data);
 	req.set_request_uri(builder.to_uri());
@@ -155,7 +155,7 @@ bool parse::api::Files::deleteFile(parse::api::File& file)
 	_Client.fillCommonParseHeaders(req, true);
 
 	web::http::uri_builder builder(FILES_URI);
-	builder.append_path(file.getFileName());
+	builder.append_path(file.getFileName(), true);
 
 	req.set_request_uri(builder.to_uri());
 
