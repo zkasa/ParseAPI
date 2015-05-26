@@ -45,6 +45,8 @@ public:
 	bool hasField(utility::string_t const& fieldName) const;
 	utility::string_t getField(utility::string_t const& fieldName) const;
 	web::json::number getFieldAsNumber(utility::string_t const& fieldName) const;
+	bool getFieldAsBoolean(utility::string_t const& fieldName) const;
+
 	void setField(utility::string_t const& fieldName, utility::string_t const& value);
 	void setField(utility::string_t const& fieldName, double const& value);
 	void setField(utility::string_t const& fieldName, int32_t const& value);

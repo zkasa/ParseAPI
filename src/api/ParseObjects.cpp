@@ -148,6 +148,10 @@ web::json::number parse::api::Object::getFieldAsNumber(utility::string_t const& 
 	return _Json.at(fieldName).as_number();
 }
 
+bool parse::api::Object::getFieldAsBoolean(utility::string_t const& fieldName) const {
+	return _Json.at(fieldName).as_bool();
+}
+
 void parse::api::Object::setField(utility::string_t const& fieldName, utility::string_t const& value) {
 	_Json[fieldName] = web::json::value::string(value);
 }
