@@ -41,6 +41,7 @@ public:
 
 	utility::string_t const& getClassName() const;
 	web::json::value const& getJson() const;
+	bool isError() const;
 	
 	bool hasField(utility::string_t const& fieldName) const;
 	utility::string_t getField(utility::string_t const& fieldName) const;

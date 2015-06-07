@@ -1,5 +1,6 @@
 #include "constants.h"
 #include "ParseClient.h"
+#include "ParseError.h"
 
 #include "ParseObjects.h"
 
@@ -136,6 +137,10 @@ web::json::value const& parse::api::Object::getJson() const {
 	return _Json;
 }
 
+bool parse::api::Object::isError() const {
+	return Error(_Json).isError();
+}
+
 bool parse::api::Object::hasField(utility::string_t const& fieldName) const {
 	return _Json.has_field(fieldName);
 }
@@ -215,3 +220,4 @@ bool parse::api::Object::operator!=(parse::api::Object const& obj) const {
 utility::string_t parse::api::Object::operator[](utility::string_t const& fieldName) const {
 	return getField(fieldName);
 }
+
