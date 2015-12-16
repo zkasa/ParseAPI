@@ -73,7 +73,7 @@ parse::api::Object parse::api::Objects::getObject(utility::string_t const& objec
 	return Object(_ClassName, _Client.requestJsonSync(req));
 }
 
-void parse::api::Objects::updateObject(parse::api::Object& object)
+parse::api::Object parse::api::Objects::updateObject(parse::api::Object& object)
 {
 	web::http::http_request req(web::http::methods::PUT);
 	_Client.fillCommonParseHeaders(req);
@@ -88,6 +88,7 @@ void parse::api::Objects::updateObject(parse::api::Object& object)
 
 	auto json = _Client.requestJsonSync(req);
 	//TODO: check result
+	return parse::api::Object(object.getClassName(), json);
 }
 
 void parse::api::Objects::deleteObject(parse::api::Object& object)

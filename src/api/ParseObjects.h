@@ -18,7 +18,7 @@ public:
 	parse::api::Object createObject(utility::string_t const& jsonStr);
 	std::vector<parse::api::Object> getObjects(utility::string_t const& query = U(""));
 	parse::api::Object getObject(utility::string_t const& objectId);
-	void updateObject(parse::api::Object& object);
+	parse::api::Object updateObject(parse::api::Object& object);
 	void deleteObject(parse::api::Object& object);
 	void deleteObject(utility::string_t const& objectId);
 

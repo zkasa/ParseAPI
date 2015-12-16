@@ -21,7 +21,7 @@ Error::~Error()
 }
 
 bool parse::api::Error::isError() const {
-	return !getField(FIELD_ERROR).empty();
+	return hasField(FIELD_ERROR) && !getField(FIELD_ERROR).empty();
 }
 
 utility::string_t parse::api::Error::getErrorCode() const {

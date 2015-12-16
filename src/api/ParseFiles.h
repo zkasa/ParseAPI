@@ -27,7 +27,7 @@ public:
 	std::vector<parse::api::File> getFilesOf(parse::api::Object const& parent
 		, utility::string_t const& fieldName);
 	bool downloadFile(parse::api::File const& file, utility::string_t const& localFilePath);
-	void updateFile(parse::api::File& file);
+	parse::api::Object updateFile(parse::api::File& file);
 	bool deleteFile(parse::api::File& file);
 
 private:

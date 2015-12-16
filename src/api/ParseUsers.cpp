@@ -73,7 +73,13 @@ std::vector<parse::api::User> parse::api::Users::getUsers()
 {
 	web::http::http_request req(web::http::methods::GET);
 	_Client.fillCommonParseHeaders(req);
-	req.set_request_uri(USERS_URI);
+
+	//req.set_request_uri(USERS_URI);
+	web::http::uri_builder builder(USERS_URI);
+	//builder.append_path(userId);
+	builder.append_query(U("limit=200"));
+	
+	req.set_request_uri(builder.to_uri());
 
 	auto json = _Client.requestJsonSync(req);
 	std::vector<parse::api::User> users;

@@ -143,10 +143,10 @@ bool parse::api::Files::downloadFile(parse::api::File const& file, utility::stri
 	return true;
 }
 
-void parse::api::Files::updateFile(parse::api::File& file)
+parse::api::Object parse::api::Files::updateFile(parse::api::File& file)
 {
 	Object obj(file.getClassName(), file.getJson());
-	Objects(_Client, file.getClassName()).updateObject(obj);
+	return Objects(_Client, file.getClassName()).updateObject(obj);
 }
 
 bool parse::api::Files::deleteFile(parse::api::File& file)
